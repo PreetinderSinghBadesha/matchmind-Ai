@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Dashboard from './components/Dashboard';
+import JobsList from './components/JobsList';
+import CandidatesList from './components/CandidatesList';
+import JobDetails from './components/JobDetails';
+import CandidateDetails from './components/CandidateDetails';
+import Navbar from './components/Navbar';
+import InitializeSystem from './components/InitializeSystem';
+import MatchesList from './components/MatchesList';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [stats, setStats] = useState({
+    jobs: 0,
+    candidates: 0,
+    matches: 0,
+    shortlisted: 0,
+    interviews: 0
+  });
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/stats');
+      const data = await response.json();
+      if (data.success) {
+        setStats(data.stats);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="app">
+        <Navbar />
+        <div className="container mt-4">
+          <Routes>
+            <Route path="/" element={<Dashboard stats={stats} refreshStats={fetchStats} />} />
+            <Route path="/initialize" element={<InitializeSystem refreshStats={fetchStats} />} />
+            <Route path="/jobs" element={<JobsList />} />
+            <Route path="/jobs/:id" element={<JobDetails refreshStats={fetchStats} />} />
+            <Route path="/candidates" element={<CandidatesList />} />
+            <Route path="/candidates/:id" element={<CandidateDetails />} />
+            <Route path="/matches" element={<MatchesList />} />
+          </Routes>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
