@@ -51,6 +51,11 @@ function Navbar() {
                 <i className="fas fa-handshake me-1"></i> Matches
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive('/resume-upload') ? 'active' : ''}`} to="/resume-upload">
+                <i className="fas fa-file-upload me-1"></i> Upload Resume
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

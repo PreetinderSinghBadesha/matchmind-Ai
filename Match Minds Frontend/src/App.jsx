@@ -9,6 +9,7 @@ import CandidateDetails from './components/CandidateDetails';
 import Navbar from './components/Navbar';
 import InitializeSystem from './components/InitializeSystem';
 import MatchesList from './components/MatchesList';
+import ResumeUpload from './components/ResumeUpload';
 
 function App() {
   const [stats, setStats] = useState({
@@ -48,6 +49,7 @@ function App() {
             <Route path="/candidates" element={<CandidatesList />} />
             <Route path="/candidates/:id" element={<CandidateDetails />} />
             <Route path="/matches" element={<MatchesList />} />
+            <Route path="/resume-upload" element={<ResumeUpload />} />
           </Routes>
         </div>
       </div>
